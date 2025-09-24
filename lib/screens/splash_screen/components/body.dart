@@ -7,6 +7,9 @@ import '../../sign_in/sign_in_screen.dart';
 import '../../../components/default_button.dart';
 
 class Body extends StatefulWidget {
+  // Perbaikan: Tambahkan konstruktor modern
+  const Body({super.key});
+
   @override
   _BodyState createState() => _BodyState();
 }
@@ -42,12 +45,13 @@ class _BodyState extends State<Body> {
                     setState(() => _currentPage = pageNumber),
                 itemCount: splashData.length,
                 itemBuilder: (ctx, index) => SplashContent(
-                  text: splashData[index]['text'],
-                  image: splashData[index]['image'],
+                  // PERBAIKAN: Tambahkan '!' untuk memberitahu Dart bahwa nilainya tidak akan null
+                  text: splashData[index]['text']!,
+                  image: splashData[index]['image']!,
                 ),
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Expanded(
               flex: 2,
               child: Column(
@@ -62,7 +66,7 @@ class _BodyState extends State<Body> {
                       ),
                     ),
                   ),
-                  Spacer(flex: 4),
+                  const Spacer(flex: 4),
                   Padding(
                     padding: EdgeInsets.all(getProportionateScreenWidth(20)),
                     child: DefaultButton(
@@ -72,7 +76,7 @@ class _BodyState extends State<Body> {
                       },
                     ),
                   ),
-                  Spacer(flex: 2),
+                  const Spacer(flex: 2),
                 ],
               ),
             ),

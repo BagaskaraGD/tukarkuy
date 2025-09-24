@@ -4,9 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../size_config.dart';
 
 class ProfilePicture extends StatelessWidget {
-  const ProfilePicture({
-    Key key,
-  }) : super(key: key);
+  const ProfilePicture({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +43,7 @@ class ProfilePicture extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

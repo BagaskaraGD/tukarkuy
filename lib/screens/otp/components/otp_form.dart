@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
-
 class OtpForm extends StatefulWidget {
+  const OtpForm({super.key}); // Perbaikan: Tambahkan konstruktor modern
+
   @override
   _OtpFormState createState() => _OtpFormState();
 }
 
 class _OtpFormState extends State<OtpForm> {
-  FocusNode pin2FocusNode;
-  FocusNode pin3FocusNode;
-  FocusNode pin4FocusNode;
+  FocusNode? pin2FocusNode;
+  FocusNode? pin3FocusNode;
+  FocusNode? pin4FocusNode;
 
   @override
   void initState() {
@@ -24,15 +25,18 @@ class _OtpFormState extends State<OtpForm> {
 
   @override
   void dispose() {
-    pin2FocusNode.dispose();
-    pin3FocusNode.dispose();
-    pin4FocusNode.dispose();
+    // PERBAIKAN: Gunakan '?.' untuk memanggil dispose dengan aman
+    pin2FocusNode?.dispose();
+    pin3FocusNode?.dispose();
+    pin4FocusNode?.dispose();
     super.dispose();
   }
 
-  void nextNode({String value, FocusNode focusNode}) {
+  // PERBAIKAN: Perbarui signature method agar null-safe
+  void nextNode({required String value, required FocusNode? focusNode}) {
     if (value.length == 1) {
-      focusNode.requestFocus();
+      // PERBAIKAN: Gunakan '?.' untuk request focus dengan aman
+      focusNode?.requestFocus();
     }
   }
 
@@ -61,10 +65,9 @@ class _OtpFormState extends State<OtpForm> {
             child: TextFormField(
               focusNode: pin2FocusNode,
               style: TextStyle(fontSize: 24),
-              autofocus: true,
-              decoration: otpInputDecoration,
               obscureText: true,
               textAlign: TextAlign.center,
+              decoration: otpInputDecoration,
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 nextNode(value: value, focusNode: pin3FocusNode);
@@ -76,10 +79,9 @@ class _OtpFormState extends State<OtpForm> {
             child: TextFormField(
               focusNode: pin3FocusNode,
               style: TextStyle(fontSize: 24),
-              autofocus: true,
-              decoration: otpInputDecoration,
               obscureText: true,
               textAlign: TextAlign.center,
+              decoration: otpInputDecoration,
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 nextNode(value: value, focusNode: pin4FocusNode);
@@ -91,13 +93,15 @@ class _OtpFormState extends State<OtpForm> {
             child: TextFormField(
               focusNode: pin4FocusNode,
               style: TextStyle(fontSize: 24),
-              autofocus: true,
-              decoration: otpInputDecoration,
               obscureText: true,
               textAlign: TextAlign.center,
+              decoration: otpInputDecoration,
               keyboardType: TextInputType.number,
               onChanged: (value) {
-                pin4FocusNode.unfocus();
+                // PERBAIKAN: Gunakan '?.' untuk unfocus dengan aman
+                if (value.length == 1) {
+                  pin4FocusNode?.unfocus();
+                }
               },
             ),
           ),

@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
 
-
 class BuildDot extends StatelessWidget {
   const BuildDot({
-    Key key,
-    this.pageNumber,
-    this.currentPage,
+    Key? key,
+    required this.pageNumber,
+    required this.currentPage,
   }) : super(key: key);
 
   final int pageNumber, currentPage;

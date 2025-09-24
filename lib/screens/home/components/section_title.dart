@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../size_config.dart';
 
 class SectionTitle extends StatelessWidget {
-  const SectionTitle({
-    Key key,
-    @required this.title,
-    @required this.press,
-  }) : super(key: key);
+  const SectionTitle({Key? key, required this.title, required this.press})
+    : super(key: key);
 
   final String title;
   final GestureTapCallback press;
@@ -15,8 +12,9 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+      padding: EdgeInsets.symmetric(
+        horizontal: getProportionateScreenWidth(20),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -27,7 +25,7 @@ class SectionTitle extends StatelessWidget {
               fontSize: getProportionateScreenWidth(20),
             ),
           ),
-          GestureDetector(onTap: press, child: Text("See more"))
+          GestureDetector(onTap: press, child: Text("See more")),
         ],
       ),
     );

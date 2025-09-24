@@ -6,7 +6,7 @@ import '../../../size_config.dart';
 import './icon_button_with_counter.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({Key key}) : super(key: key);
+  const HomeHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

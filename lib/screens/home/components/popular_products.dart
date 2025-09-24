@@ -7,9 +7,7 @@ import '../../../components/product_card.dart';
 import '../../product_details/product_details_screen.dart';
 
 class PopularProducts extends StatelessWidget {
-  const PopularProducts({
-    Key key,
-  }) : super(key: key);
+  const PopularProducts({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +31,7 @@ class PopularProducts extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: getProportionateScreenWidth(20),
-              )
+              SizedBox(width: getProportionateScreenWidth(20)),
             ],
           ),
         ),

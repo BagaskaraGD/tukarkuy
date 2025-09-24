@@ -4,18 +4,13 @@ import './section_title.dart';
 import '../../../size_config.dart';
 
 class SpecialOffers extends StatelessWidget {
-  const SpecialOffers({
-    Key key,
-  }) : super(key: key);
+  const SpecialOffers({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SectionTitle(
-          title: "Special for you",
-          press: () {},
-        ),
+        SectionTitle(title: "Special for you", press: () {}),
         SizedBox(height: getProportionateScreenHeight(20)),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -44,11 +39,11 @@ class SpecialOffers extends StatelessWidget {
 
 class SpecialOfferCard extends StatelessWidget {
   const SpecialOfferCard({
-    Key key,
-    @required this.noOfBrands,
-    @required this.image,
-    @required this.text,
-    @required this.press,
+    Key? key,
+    required this.noOfBrands,
+    required this.image,
+    required this.text,
+    required this.press,
   }) : super(key: key);
 
   final int noOfBrands;

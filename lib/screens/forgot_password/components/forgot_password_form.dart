@@ -13,7 +13,6 @@ class ForgotPasswordForm extends StatefulWidget {
 
 class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
   final _formKey = GlobalKey<FormState>();
-  List<String> errors = [];
   String? email;
   bool firstSubmit = false;
 
@@ -24,18 +23,20 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         Form(
           key: _formKey,
           child: TextFormField(
-            onSaved: (newEmail) => this.email = newEmail,
+            onSaved: (newEmail) => email = newEmail,
             onChanged: (email) {
-              if (firstSubmit) _formKey.currentState.validate();
+              if (firstSubmit) {
+                // PERBAIKAN: Gunakan '?' untuk memanggil validate jika state tidak null
+                _formKey.currentState?.validate();
+              }
             },
             validator: (email) {
-              if (email.isEmpty) {
+              // PERBAIKAN: Cek apakah email null atau kosong
+              if (email == null || email.isEmpty) {
                 return kEmailNullError;
-              } else if (email.isNotEmpty &&
-                  !emailValidatorRegExp.hasMatch(email)) {
+              } else if (!emailValidatorRegExp.hasMatch(email)) {
                 return kInvalidEmailError;
               }
-
               return null;
             },
             decoration: InputDecoration(
@@ -50,8 +51,10 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
         DefaultButton(
           text: 'Continue',
           press: () {
-            if (_formKey.currentState.validate()) {
-              // send an email
+            // PERBAIKAN: Tambahkan '!' karena kita yakin form ada saat tombol ditekan
+            if (_formKey.currentState!.validate()) {
+              _formKey.currentState!.save();
+              // Kirim email atau lakukan aksi selanjutnya
             }
             firstSubmit = true;
           },

@@ -23,7 +23,8 @@ class CartScreen extends StatelessWidget {
           Text("Your Cart", style: TextStyle(color: Colors.black)),
           Text(
             "${demoCarts.length} items",
-            style: Theme.of(context).textTheme.caption,
+            // PERBAIKAN: Ganti .caption menjadi .bodySmall
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
       ),

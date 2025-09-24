@@ -8,16 +8,15 @@ import '../../login_success/login_success_screen.dart';
 import '../../forgot_password/forgot_password_screen.dart';
 
 class SignForm extends StatefulWidget {
+  const SignForm({super.key}); // Tambahkan konstruktor
+
   @override
   _SignFormState createState() => _SignFormState();
 }
 
 class _SignFormState extends State<SignForm> {
   final _formKey = GlobalKey<FormState>();
-  final List<String> errors = [];
-
-  String email, password;
-
+  String? email, password;
   bool firstSubmit = false;
   bool remember = false;
 
@@ -36,20 +35,17 @@ class _SignFormState extends State<SignForm> {
               Checkbox(
                 value: remember,
                 activeColor: kPrimaryColor,
-                onChanged: (value) => setState(() => remember = value),
+                // PERBAIKAN: Tangani nilai null dari onChanged
+                onChanged: (value) => setState(() => remember = value ?? false),
               ),
-              Text("Remember me"),
-              Spacer(),
+              const Text("Remember me"),
+              const Spacer(),
               TextButton(
-                onPressed: () => Navigator.push(
+                onPressed: () => Navigator.pushNamed(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => ForgotPasswordScreen(),
-                  ),
+                  ForgotPasswordScreen.routeName,
                 ),
-                child: Text(
-                  "Forgot password",
-                ),
+                child: const Text("Forgot password"),
               ),
             ],
           ),
@@ -57,8 +53,9 @@ class _SignFormState extends State<SignForm> {
           DefaultButton(
             text: "Continue",
             press: () {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
+              // PERBAIKAN: Gunakan '!' karena kita yakin form sudah ada
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
                 Navigator.pushNamed(context, LoginSuccessScreen.routeName);
               }
               firstSubmit = true;
@@ -71,20 +68,23 @@ class _SignFormState extends State<SignForm> {
 
   TextFormField buildPasswordFormField() {
     return TextFormField(
-      onSaved: (newPassword) => this.password = newPassword,
+      onSaved: (newPassword) => password = newPassword,
       onChanged: (password) {
-        if (firstSubmit) _formKey.currentState.validate();
+        if (firstSubmit) {
+          // PERBAIKAN: Gunakan '?.' untuk safe call
+          _formKey.currentState?.validate();
+        }
       },
       validator: (password) {
-        if (password.isEmpty) {
+        // PERBAIKAN: Cek null sebelum cek properti lainnya
+        if (password == null || password.isEmpty) {
           return kPassNullError;
-        } else if (password.isNotEmpty && password.length <= 7) {
+        } else if (password.length <= 7) {
           return kShortPassError;
         }
-
         return null;
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: "Password",
         hintText: "Enter your password",
         suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/Lock.svg"),
@@ -95,20 +95,23 @@ class _SignFormState extends State<SignForm> {
 
   TextFormField buildEmailFormField() {
     return TextFormField(
-      onSaved: (newEmail) => this.email = newEmail,
+      onSaved: (newEmail) => email = newEmail,
       onChanged: (email) {
-        if (firstSubmit) _formKey.currentState.validate();
+        if (firstSubmit) {
+          // PERBAIKAN: Gunakan '?.' untuk safe call
+          _formKey.currentState?.validate();
+        }
       },
       validator: (email) {
-        if (email.isEmpty) {
+        // PERBAIKAN: Cek null sebelum cek properti lainnya
+        if (email == null || email.isEmpty) {
           return kEmailNullError;
-        } else if (email.isNotEmpty && !emailValidatorRegExp.hasMatch(email)) {
+        } else if (!emailValidatorRegExp.hasMatch(email)) {
           return kInvalidEmailError;
         }
-
         return null;
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: "Email",
         hintText: "Enter your email",
         suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/Mail.svg"),

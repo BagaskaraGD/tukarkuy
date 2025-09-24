@@ -4,14 +4,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../size_config.dart';
 import '../../../components/rounded_icon_button.dart';
 
-class CustomAppBar extends PreferredSize {
+// PERBAIKAN 1: Jadikan StatelessWidget dan implementasikan PreferredSizeWidget
+class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double rating;
 
-  CustomAppBar(this.rating);
-
-  @override
-  // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(AppBar().preferredSize.height);
+  // PERBAIKAN 2: Gunakan konstruktor modern
+  const CustomAppBar({super.key, required this.rating});
 
   @override
   Widget build(BuildContext context) {
@@ -33,21 +31,25 @@ class CustomAppBar extends PreferredSize {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
               child: Row(
                 children: [
                   Text(
                     "$rating",
-                    style: TextStyle(fontWeight: FontWeight.w600),
+                    style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(width: 5),
                   SvgPicture.asset("assets/icons/Star Icon.svg"),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
+
+  // PERBAIKAN 3: Override preferredSize getter
+  @override
+  Size get preferredSize => Size.fromHeight(AppBar().preferredSize.height);
 }

@@ -6,10 +6,10 @@ import '../../../size_config.dart';
 
 class IconButtonWithCounter extends StatelessWidget {
   const IconButtonWithCounter({
-    Key key,
-    @required this.svgSrc,
+    Key? key,
+    required this.svgSrc,
     this.noOfItems = 0,
-    @required this.press,
+    required this.press,
   }) : super(key: key);
 
   final String svgSrc;
@@ -25,9 +25,7 @@ class IconButtonWithCounter extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           Container(
-            padding: EdgeInsets.all(
-              getProportionateScreenWidth(12),
-            ),
+            padding: EdgeInsets.all(getProportionateScreenWidth(12)),
             height: getProportionateScreenHeight(46),
             width: getProportionateScreenWidth(46),
             decoration: BoxDecoration(

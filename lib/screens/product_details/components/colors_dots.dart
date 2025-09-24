@@ -5,12 +5,8 @@ import '../../../size_config.dart';
 import '../../../models/Product.dart';
 import '../../../components/rounded_icon_button.dart';
 
-
 class ColorDots extends StatefulWidget {
-  ColorDots({
-    Key key,
-    @required this.product,
-  }) : super(key: key);
+  ColorDots({Key? key, required this.product}) : super(key: key);
 
   final Product product;
 
@@ -24,8 +20,9 @@ class _ColorDotsState extends State<ColorDots> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+      padding: EdgeInsets.symmetric(
+        horizontal: getProportionateScreenWidth(20),
+      ),
       child: Row(
         children: [
           ...List.generate(
@@ -49,11 +46,8 @@ class _ColorDotsState extends State<ColorDots> {
 }
 
 class ColorDot extends StatelessWidget {
-  const ColorDot({
-    Key key,
-    @required this.color,
-    this.isSelected = false,
-  }) : super(key: key);
+  const ColorDot({Key? key, required this.color, this.isSelected = false})
+    : super(key: key);
 
   final Color color;
   final bool isSelected;
@@ -66,15 +60,13 @@ class ColorDot extends StatelessWidget {
       width: getProportionateScreenWidth(40),
       height: getProportionateScreenWidth(40),
       decoration: BoxDecoration(
-        border:
-            Border.all(color: isSelected ? kPrimaryColor : Colors.transparent),
+        border: Border.all(
+          color: isSelected ? kPrimaryColor : Colors.transparent,
+        ),
         shape: BoxShape.circle,
       ),
       child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-        ),
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
       ),
     );
   }

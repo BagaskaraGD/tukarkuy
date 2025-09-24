@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import ini
 
 import 'constants.dart';
 
@@ -7,7 +8,7 @@ ThemeData theme() {
     scaffoldBackgroundColor: Colors.white,
     fontFamily: 'Muli',
     appBarTheme: appBarTheme(),
-    textTheme: testTheme(),
+    textTheme: textTheme(), // Ganti nama fungsi agar tidak bentrok
     inputDecorationTheme: inputDecorationTheme(),
     primarySwatch: Colors.blue,
   );
@@ -21,20 +22,18 @@ InputDecorationTheme inputDecorationTheme() {
   );
   return InputDecorationTheme(
     floatingLabelBehavior: FloatingLabelBehavior.always,
-    contentPadding: EdgeInsets.symmetric(
-      vertical: 20,
-      horizontal: 30,
-    ),
+    contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
     border: outlineInputBorder,
     enabledBorder: outlineInputBorder,
     focusedBorder: outlineInputBorder,
   );
 }
 
-TextTheme testTheme() {
+TextTheme textTheme() {
+  // Ganti nama fungsi
   return TextTheme(
-    bodyText1: TextStyle(color: kTextColor),
-    bodyText2: TextStyle(color: kTextColor),
+    bodyLarge: TextStyle(color: kTextColor), // Ganti dari bodyText1
+    bodyMedium: TextStyle(color: kTextColor), // Ganti dari bodyText2
   );
 }
 
@@ -43,13 +42,12 @@ AppBarTheme appBarTheme() {
     centerTitle: true,
     color: Colors.white,
     elevation: 0,
-    brightness: Brightness.light,
+    systemOverlayStyle: SystemUiOverlayStyle.light, // Ganti dari brightness
     iconTheme: IconThemeData(color: Colors.black),
-    textTheme: TextTheme(
-      headline6: TextStyle(
-        color: Color(0xFF8b8b8b),
-        fontSize: 18,
-      ),
+    titleTextStyle: TextStyle(
+      // Ganti dari textTheme
+      color: Color(0xFF8b8b8b),
+      fontSize: 18,
     ),
   );
 }

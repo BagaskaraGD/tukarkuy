@@ -15,7 +15,6 @@ class _SignFormState extends State<CompleteProfileForm> {
   final _formKey = GlobalKey<FormState>();
   String? firstName, lastName, phone, address;
   final List<String> errors = [];
-  bool remember = false;
   bool firstSubmit = false;
 
   @override
@@ -35,13 +34,14 @@ class _SignFormState extends State<CompleteProfileForm> {
           DefaultButton(
             text: "Continue",
             press: () {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
-                print(this.phone);
+              // PERBAIKAN: Tambahkan '!' untuk memastikan tidak null
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
+                // Navigasi ke OTP Screen
                 Navigator.pushNamed(
                   context,
                   OTPScreen.routeName,
-                  arguments: this.phone,
+                  arguments: phone,
                 );
               }
               firstSubmit = true;
@@ -54,21 +54,25 @@ class _SignFormState extends State<CompleteProfileForm> {
 
   TextFormField buildFirstNameFormField() {
     return TextFormField(
-      onSaved: (newName) => this.firstName = newName,
+      onSaved: (newName) => firstName = newName,
       onChanged: (name) {
-        if (firstSubmit) _formKey.currentState.validate();
+        if (firstSubmit) {
+          _formKey.currentState?.validate(); // Gunakan '?' untuk safe call
+        }
       },
       validator: (name) {
-        if (name.isEmpty) {
+        // PERBAIKAN: Periksa null sebelum memeriksa .isEmpty
+        if (name == null || name.isEmpty) {
           return kFirstNamelNullError;
         }
-
         return null;
       },
       decoration: InputDecoration(
         labelText: "First Name",
         hintText: "Enter your first name",
-        suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/User Icon.svg"),
+        suffixIcon: CustomSuffixIcon(
+          iconPath: "assets/icons/User.svg",
+        ), // Pastikan path icon benar
       ),
       keyboardType: TextInputType.name,
     );
@@ -76,21 +80,25 @@ class _SignFormState extends State<CompleteProfileForm> {
 
   TextFormField buildLastNameFormField() {
     return TextFormField(
-      onSaved: (newName) => this.lastName = newName,
+      onSaved: (newName) => lastName = newName,
       onChanged: (name) {
-        if (firstSubmit) _formKey.currentState.validate();
+        if (firstSubmit) {
+          _formKey.currentState?.validate(); // Gunakan '?' untuk safe call
+        }
       },
       validator: (name) {
-        if (name.isEmpty) {
+        // PERBAIKAN: Periksa null sebelum memeriksa .isEmpty
+        if (name == null || name.isEmpty) {
           return kLastNamelNullError;
         }
-
         return null;
       },
       decoration: InputDecoration(
         labelText: "Last Name",
         hintText: "Enter your last name",
-        suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/User Icon.svg"),
+        suffixIcon: CustomSuffixIcon(
+          iconPath: "assets/icons/User.svg",
+        ), // Pastikan path icon benar
       ),
       keyboardType: TextInputType.name,
     );
@@ -98,15 +106,17 @@ class _SignFormState extends State<CompleteProfileForm> {
 
   TextFormField buildPhoneFormField() {
     return TextFormField(
-      onSaved: (newPhone) => this.phone = newPhone,
+      onSaved: (newPhone) => phone = newPhone,
       onChanged: (phone) {
-        if (firstSubmit) _formKey.currentState.validate();
+        if (firstSubmit) {
+          _formKey.currentState?.validate(); // Gunakan '?' untuk safe call
+        }
       },
       validator: (phone) {
-        if (phone.isEmpty) {
+        // PERBAIKAN: Periksa null sebelum memeriksa .isEmpty
+        if (phone == null || phone.isEmpty) {
           return kPhoneNumberNullError;
         }
-
         return null;
       },
       decoration: InputDecoration(
@@ -120,15 +130,17 @@ class _SignFormState extends State<CompleteProfileForm> {
 
   TextFormField buildAddressFormField() {
     return TextFormField(
-      onSaved: (newAddress) => this.address = newAddress,
+      onSaved: (newAddress) => address = newAddress,
       onChanged: (address) {
-        if (firstSubmit) _formKey.currentState.validate();
+        if (firstSubmit) {
+          _formKey.currentState?.validate(); // Gunakan '?' untuk safe call
+        }
       },
       validator: (address) {
-        if (address.isEmpty) {
+        // PERBAIKAN: Periksa null sebelum memeriksa .isEmpty
+        if (address == null || address.isEmpty) {
           return kAddressNullError;
         }
-
         return null;
       },
       decoration: InputDecoration(

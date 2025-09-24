@@ -7,10 +7,10 @@ import '../../../models/Product.dart';
 
 class ProductDescription extends StatelessWidget {
   const ProductDescription({
-    Key key,
-    @required this.product,
-    @required this.pressOnSeeMore,
-  }) : super(key: key);
+    super.key, // Perbaikan: Gunakan super.key
+    required this.product,
+    required this.pressOnSeeMore,
+  });
 
   final Product product;
   final GestureTapCallback pressOnSeeMore;
@@ -21,14 +21,16 @@ class ProductDescription extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+          padding: EdgeInsets.symmetric(
+            horizontal: getProportionateScreenWidth(20),
+          ),
           child: Text(
             product.title,
-            style: Theme.of(context).textTheme.headline6,
+            // PERBAIKAN 1: Ganti headline6 menjadi titleLarge
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
-        SizedBox(height: 5),
+        const SizedBox(height: 5),
         Align(
           alignment: Alignment.centerRight,
           child: Container(
@@ -38,7 +40,7 @@ class ProductDescription extends StatelessWidget {
               color: product.isFavourite
                   ? kPrimaryColor.withOpacity(.17)
                   : kSecondaryColor.withOpacity(.12),
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(15),
                 topLeft: Radius.circular(15),
               ),
@@ -47,9 +49,13 @@ class ProductDescription extends StatelessWidget {
               product.isFavourite
                   ? "assets/icons/Heart Icon_2.svg"
                   : "assets/icons/Heart Icon.svg",
-              color: product.isFavourite
-                  ? Color(0xFFFF4848).withOpacity(.9)
-                  : Color(0xFFDBDEE4),
+              // PERBAIKAN 2: Ganti 'color' menjadi 'colorFilter'
+              colorFilter: ColorFilter.mode(
+                product.isFavourite
+                    ? const Color(0xFFFF4848).withOpacity(.9)
+                    : const Color(0xFFDBDEE4),
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ),
@@ -58,10 +64,7 @@ class ProductDescription extends StatelessWidget {
             left: getProportionateScreenWidth(20),
             right: getProportionateScreenWidth(64),
           ),
-          child: Text(
-            product.description,
-            maxLines: 3,
-          ),
+          child: Text(product.description, maxLines: 3),
         ),
         Padding(
           padding: EdgeInsets.only(
@@ -69,16 +72,14 @@ class ProductDescription extends StatelessWidget {
             left: getProportionateScreenWidth(20),
             right: getProportionateScreenWidth(20),
           ),
-          child: SizedBox(
-            child: TextButton(
-              onPressed: pressOnSeeMore,
-              child: Row(
-                children: [
-                  Text("See More Details"),
-                  SizedBox(width: 5),
-                  Icon(Icons.arrow_forward_ios, size: 12),
-                ],
-              ),
+          child: TextButton(
+            onPressed: pressOnSeeMore,
+            child: const Row(
+              children: [
+                Text("See More Details"),
+                SizedBox(width: 5),
+                Icon(Icons.arrow_forward_ios, size: 12),
+              ],
             ),
           ),
         ),

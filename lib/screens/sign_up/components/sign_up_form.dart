@@ -7,16 +7,16 @@ import '../../../components/default_button.dart';
 import '../../../components/custom_suffix_icon.dart';
 
 class SignUpForm extends StatefulWidget {
+  const SignUpForm({super.key}); // Tambahkan konstruktor
+
   @override
   _SignFormState createState() => _SignFormState();
 }
 
 class _SignFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  String email, password, confirmPassword;
-  final List<String> errors = [];
+  String? email, password, confirmPassword;
   bool firstSubmit = false;
-  bool remember = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +33,9 @@ class _SignFormState extends State<SignUpForm> {
           DefaultButton(
             text: "Continue",
             press: () {
-              if (_formKey.currentState.validate()) {
-                _formKey.currentState.save();
+              // PERBAIKAN: Gunakan '!' karena kita yakin form sudah ada
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
                 Navigator.pushNamed(context, CompleteProfileScreen.routeName);
               }
               firstSubmit = true;
@@ -47,20 +48,23 @@ class _SignFormState extends State<SignUpForm> {
 
   TextFormField buildEmailFormField() {
     return TextFormField(
-      onSaved: (newEmail) => this.email = newEmail,
+      onSaved: (newEmail) => email = newEmail,
       onChanged: (email) {
-        if (firstSubmit) _formKey.currentState.validate();
+        if (firstSubmit) {
+          // PERBAIKAN: Gunakan '?.' untuk safe call
+          _formKey.currentState?.validate();
+        }
       },
       validator: (email) {
-        if (email.isEmpty) {
+        // PERBAIKAN: Cek null sebelum cek properti lainnya
+        if (email == null || email.isEmpty) {
           return kEmailNullError;
-        } else if (email.isNotEmpty && !emailValidatorRegExp.hasMatch(email)) {
+        } else if (!emailValidatorRegExp.hasMatch(email)) {
           return kInvalidEmailError;
         }
-
         return null;
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: "Email",
         hintText: "Enter your email",
         suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/Mail.svg"),
@@ -71,21 +75,24 @@ class _SignFormState extends State<SignUpForm> {
 
   TextFormField buildPasswordFormField() {
     return TextFormField(
-      onSaved: (newPassword) => this.password = newPassword,
-      onChanged: (password) {
-        if (firstSubmit) _formKey.currentState.validate();
-        this.password = password;
+      onSaved: (newPassword) => password = newPassword,
+      onChanged: (value) {
+        // Simpan nilai password setiap kali berubah untuk validasi konfirmasi
+        password = value;
+        if (firstSubmit) {
+          _formKey.currentState?.validate();
+        }
       },
       validator: (password) {
-        if (password.isEmpty) {
+        // PERBAIKAN: Cek null sebelum cek properti lainnya
+        if (password == null || password.isEmpty) {
           return kPassNullError;
-        } else if (password.isNotEmpty && password.length <= 7) {
+        } else if (password.length <= 7) {
           return kShortPassError;
         }
-
         return null;
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: "Password",
         hintText: "Enter your password",
         suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/Lock.svg"),
@@ -96,18 +103,23 @@ class _SignFormState extends State<SignUpForm> {
 
   TextFormField buildConfirmPasswordFormField() {
     return TextFormField(
-      onSaved: (newPassword) => this.confirmPassword = newPassword,
+      onSaved: (newPassword) => confirmPassword = newPassword,
       onChanged: (password) {
-        if (firstSubmit) _formKey.currentState.validate();
+        if (firstSubmit) {
+          _formKey.currentState?.validate();
+        }
       },
-      validator: (password) {
-        if (password != this.password) {
+      validator: (value) {
+        // PERBAIKAN: Cek null dan pastikan sama dengan password
+        if (value == null || value.isEmpty) {
+          return "Please re-enter your password";
+        }
+        if (value != password) {
           return kMatchPassError;
         }
-
         return null;
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: "Confirm Password",
         hintText: "Repeat your password",
         suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/Lock.svg"),

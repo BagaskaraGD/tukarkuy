@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tukarkuy/services/auth_service.dart';
 
 import '../../../constants.dart';
 import '../../../size_config.dart';
@@ -52,13 +53,28 @@ class _SignFormState extends State<SignForm> {
           SizedBox(height: getProportionateScreenHeight(30)),
           DefaultButton(
             text: "Continue",
-            press: () {
-              // PERBAIKAN: Gunakan '!' karena kita yakin form sudah ada
+            press: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
-                Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+
+                // Panggil service-mu di sini
+                AuthService authService = AuthService();
+                bool success = await authService.login(email!, password!);
+
+                if (success) {
+                  // Navigasi jika berhasil
+                  Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+                } else {
+                  // Tampilkan pesan error jika gagal
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Login Gagal. Periksa kembali email/password.',
+                      ),
+                    ),
+                  );
+                }
               }
-              firstSubmit = true;
             },
           ),
         ],

@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:tukarkuy/screens/complete_profile/complete_profile_screen.dart';
-
-import '../../../constants.dart';
-import '../../../size_config.dart';
-import '../../../components/default_button.dart';
-import '../../../components/custom_suffix_icon.dart';
+import 'package:tukarkuy/components/custom_suffix_icon.dart';
+import 'package:tukarkuy/components/default_button.dart';
+import 'package:tukarkuy/constants.dart';
+import 'package:tukarkuy/screens/sign_in/sign_in_screen.dart';
+import 'package:tukarkuy/services/auth_service.dart';
+import 'package:tukarkuy/size_config.dart';
 
 class SignUpForm extends StatefulWidget {
-  const SignUpForm({super.key}); // Tambahkan konstruktor
+  const SignUpForm({super.key});
 
   @override
-  _SignFormState createState() => _SignFormState();
+  _SignUpFormState createState() => _SignUpFormState();
 }
 
-class _SignFormState extends State<SignUpForm> {
+class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  String? email, password, confirmPassword;
+  String? name, email, password, confirmPassword;
   bool firstSubmit = false;
+  final AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,9 @@ class _SignFormState extends State<SignUpForm> {
       key: _formKey,
       child: Column(
         children: [
+          // Tambahkan field untuk Nama
+          buildNameFormField(),
+          SizedBox(height: getProportionateScreenHeight(30)),
           buildEmailFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
           buildPasswordFormField(),
@@ -32,13 +36,37 @@ class _SignFormState extends State<SignUpForm> {
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Continue",
-            press: () {
-              // PERBAIKAN: Gunakan '!' karena kita yakin form sudah ada
+            press: () async {
+              // JADIKAN ASYNC
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+
+                bool success = await authService.register(
+                  name: name!,
+                  email: email!,
+                  password: password!,
+                  passwordConfirmation: confirmPassword!,
+                );
+
+                if (!mounted) return;
+
+                if (success) {
+                  // Jika berhasil, arahkan ke halaman login
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Registrasi berhasil! Silakan login.'),
+                    ),
+                  );
+                  Navigator.pushNamed(context, SignInScreen.routeName);
+                } else {
+                  // Jika gagal, tampilkan pesan error
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Registrasi gagal. Coba lagi.'),
+                    ),
+                  );
+                }
               }
-              firstSubmit = true;
             },
           ),
         ],
@@ -46,30 +74,42 @@ class _SignFormState extends State<SignUpForm> {
     );
   }
 
-  TextFormField buildEmailFormField() {
+  TextFormField buildNameFormField() {
     return TextFormField(
-      onSaved: (newEmail) => email = newEmail,
-      onChanged: (email) {
-        if (firstSubmit) {
-          // PERBAIKAN: Gunakan '?.' untuk safe call
-          _formKey.currentState?.validate();
-        }
-      },
-      validator: (email) {
-        // PERBAIKAN: Cek null sebelum cek properti lainnya
-        if (email == null || email.isEmpty) {
-          return kEmailNullError;
-        } else if (!emailValidatorRegExp.hasMatch(email)) {
-          return kInvalidEmailError;
+      onSaved: (newName) => name = newName,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return "Please enter your name";
         }
         return null;
       },
       decoration: const InputDecoration(
-        labelText: "Email",
-        hintText: "Enter your email",
-        suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/Mail.svg"),
+        labelText: "Name",
+        hintText: "Enter your name",
+        suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/User.svg"),
       ),
-      keyboardType: TextInputType.emailAddress,
+      keyboardType: TextInputType.name,
+    );
+  }
+
+  TextFormField buildConfirmPasswordFormField() {
+    return TextFormField(
+      onSaved: (newPassword) => confirmPassword = newPassword,
+      onChanged: (value) {
+        if (firstSubmit) _formKey.currentState?.validate();
+      },
+      validator: (value) {
+        if (value != password) {
+          return "Passwords do not match";
+        }
+        return null;
+      },
+      decoration: const InputDecoration(
+        labelText: "Confirm Password",
+        hintText: "Re-enter your password",
+        suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/Lock.svg"),
+      ),
+      obscureText: true,
     );
   }
 
@@ -77,17 +117,14 @@ class _SignFormState extends State<SignUpForm> {
     return TextFormField(
       onSaved: (newPassword) => password = newPassword,
       onChanged: (value) {
-        // Simpan nilai password setiap kali berubah untuk validasi konfirmasi
+        // Simpan nilai password agar bisa dibandingkan di confirm password
         password = value;
-        if (firstSubmit) {
-          _formKey.currentState?.validate();
-        }
+        if (firstSubmit) _formKey.currentState?.validate();
       },
-      validator: (password) {
-        // PERBAIKAN: Cek null sebelum cek properti lainnya
-        if (password == null || password.isEmpty) {
+      validator: (value) {
+        if (value == null || value.isEmpty) {
           return kPassNullError;
-        } else if (password.length <= 7) {
+        } else if (value.length < 8) {
           return kShortPassError;
         }
         return null;
@@ -101,30 +138,26 @@ class _SignFormState extends State<SignUpForm> {
     );
   }
 
-  TextFormField buildConfirmPasswordFormField() {
+  TextFormField buildEmailFormField() {
     return TextFormField(
-      onSaved: (newPassword) => confirmPassword = newPassword,
-      onChanged: (password) {
-        if (firstSubmit) {
-          _formKey.currentState?.validate();
-        }
+      onSaved: (newEmail) => email = newEmail,
+      onChanged: (email) {
+        if (firstSubmit) _formKey.currentState?.validate();
       },
-      validator: (value) {
-        // PERBAIKAN: Cek null dan pastikan sama dengan password
-        if (value == null || value.isEmpty) {
-          return "Please re-enter your password";
-        }
-        if (value != password) {
-          return kMatchPassError;
+      validator: (email) {
+        if (email == null || email.isEmpty) {
+          return kEmailNullError;
+        } else if (!emailValidatorRegExp.hasMatch(email)) {
+          return kInvalidEmailError;
         }
         return null;
       },
       decoration: const InputDecoration(
-        labelText: "Confirm Password",
-        hintText: "Repeat your password",
-        suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/Lock.svg"),
+        labelText: "Email",
+        hintText: "Enter your email",
+        suffixIcon: CustomSuffixIcon(iconPath: "assets/icons/Mail.svg"),
       ),
-      obscureText: true,
+      keyboardType: TextInputType.emailAddress,
     );
   }
 }

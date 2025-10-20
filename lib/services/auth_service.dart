@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  // Pastikan URL ini benar
-  final String _baseUrl = "http://10.0.2.2:8000/api";
+  final String _baseUrl = "http://192.168.0.8:8000/api";
 
-  /// Fungsi untuk Login
+  String? _token; // simpan token login di sini
+
   Future<bool> login(String email, String password) async {
     try {
       final response = await http.post(
@@ -19,8 +19,10 @@ class AuthService {
 
       if (response.statusCode == 200) {
         print("Login berhasil!");
-        print("Response: ${response.body}");
-        // Nanti kita akan simpan token dari response.body di sini
+        final data = jsonDecode(response.body);
+        // Pastikan sesuai struktur respons dari backendmu
+        _token = data['token'];
+        print("Token: $_token");
         return true;
       } else {
         print("Login gagal!");
@@ -34,8 +36,6 @@ class AuthService {
     }
   }
 
-  /// --- FUNGSI REGISTER YANG BARU ---
-  /// Fungsi untuk Register
   Future<bool> register({
     required String name,
     required String email,
@@ -57,7 +57,6 @@ class AuthService {
         }),
       );
 
-      // Backend Laravel Breeze biasanya memberikan status 201 (Created)
       if (response.statusCode == 201) {
         print("Registrasi berhasil!");
         return true;
@@ -69,6 +68,38 @@ class AuthService {
       }
     } catch (e) {
       print("Terjadi error saat registrasi: $e");
+      return false;
+    }
+  }
+
+  /// Fungsi Logout dengan Sanctum
+  Future<bool> logout() async {
+    try {
+      if (_token == null) {
+        print("Token belum ada, user belum login");
+        return false;
+      }
+
+      final response = await http.post(
+        Uri.parse('$_baseUrl/logout'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $_token', // token dikirim di sini
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("Logout berhasil!");
+        _token = null; // hapus token lokal
+        return true;
+      } else {
+        print("Logout gagal!");
+        print("Status Code: ${response.statusCode}");
+        print("Response Body: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      print("Terjadi error saat logout: $e");
       return false;
     }
   }

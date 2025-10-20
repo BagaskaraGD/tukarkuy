@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:tukarkuy/screens/home/home_screen.dart';
 import './build_dot.dart';
 import './splash_content.dart';
 import '../../../size_config.dart';
-import '../../sign_in/sign_in_screen.dart';
+// import '../../sign_in/sign_in_screen.dart';
 import '../../../components/default_button.dart';
 
 class Body extends StatefulWidget {
@@ -72,7 +72,7 @@ class _BodyState extends State<Body> {
                     child: DefaultButton(
                       text: "Continue",
                       press: () {
-                        Navigator.pushNamed(context, SignInScreen.routeName);
+                        Navigator.pushNamed(context, HomeScreen.routeName);
                       },
                     ),
                   ),

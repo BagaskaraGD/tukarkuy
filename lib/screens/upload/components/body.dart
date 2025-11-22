@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tukarkuy/size_config.dart';
 import 'package:tukarkuy/components/default_button.dart';
+import 'package:tukarkuy/services/barang_service.dart';
 
 class Body extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class Body extends StatefulWidget {
 
 class _BodyState extends State<Body> {
   final _formKey = GlobalKey<FormState>();
+  final BarangService _barangService = BarangService();
   File? _image;
   String? productName;
   String? condition = 'Baru';
@@ -29,13 +31,49 @@ class _BodyState extends State<Body> {
     }
   }
 
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    if (_image != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Silakan upload foto barang terlebih dahulu")),
+      );
+      return;
+    }
+
+    _formKey.currentState!.save();
+
+    final success = await _barangService.createBarang(
+      namaBar: productName!,
+      deskripsiBar: description!,
+      stokBar: int.parse(stock!),
+      kondisi: condition ?? 'Baru',
+      imageFile: _image,
+    );
+
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Barang berhasil diupload")));
+      Navigator.pop(context); // kalau mau kembali ke halaman sebelumnya
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Gagal upload barang, cek log / server")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SizedBox(
         width: double.infinity,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
+          padding: EdgeInsets.symmetric(
+            horizontal: getProportionateScreenWidth(20),
+          ),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -50,7 +88,8 @@ class _BodyState extends State<Body> {
                       borderRadius: BorderRadius.circular(15),
                       border: Border.all(
                         color: Color(0xFFBDBDBD),
-                        style: BorderStyle.solid, // Should be dotted but solid for now
+                        style: BorderStyle
+                            .solid, // Should be dotted but solid for now
                         width: 1,
                       ),
                     ),
@@ -93,18 +132,7 @@ class _BodyState extends State<Body> {
                       SizedBox(height: getProportionateScreenHeight(20)),
                       buildStockFormField(),
                       SizedBox(height: getProportionateScreenHeight(30)),
-                      DefaultButton(
-                        text: "Upload",
-                        press: () {
-                          if (_formKey.currentState!.validate()) {
-                            _formKey.currentState!.save();
-                            // Implement upload logic
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text("Barang berhasil diupload (Simulasi)")),
-                            );
-                          }
-                        },
-                      ),
+                      DefaultButton(text: "Upload", press: _submit),
                       SizedBox(height: getProportionateScreenHeight(30)),
                     ],
                   ),
@@ -175,10 +203,7 @@ class _BodyState extends State<Body> {
     return DropdownButtonFormField<String>(
       value: condition,
       items: conditions.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
+        return DropdownMenuItem<String>(value: value, child: Text(value));
       }).toList(),
       onChanged: (newValue) {
         setState(() {

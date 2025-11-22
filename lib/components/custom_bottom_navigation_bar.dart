@@ -1,15 +1,14 @@
-// lib/components/custom_bottom_navigation_bar.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tukarkuy/screens/home/home_screen.dart';
 import 'package:tukarkuy/screens/profile/profile_screen.dart';
-import 'package:tukarkuy/screens/sign_in/sign_in_screen.dart'; // <-- Pastikan import ini ada
-import 'package:tukarkuy/utils/token_storage.dart'; // <-- Pastikan import ini ada
+import 'package:tukarkuy/screens/sign_in/sign_in_screen.dart';
+import 'package:tukarkuy/screens/upload/upload_screen.dart'; // New Import
+import 'package:tukarkuy/utils/token_storage.dart';
 
 import '../constants.dart';
 
-enum Menu { home, favourites, message, profile }
+enum Menu { home, upload, profile }
 
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({Key? key, required this.selectedMenu})
@@ -49,35 +48,32 @@ class CustomBottomNavigationBar extends StatelessWidget {
                     : inActiveColor,
               ),
               onPressed: () {
-                // Navigasi ke Home jika belum di sana
                 if (selectedMenu != Menu.home) {
                   Navigator.pushReplacementNamed(context, HomeScreen.routeName);
                 }
               },
             ),
             IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/Heart Icon.svg",
-                // ignore: deprecated_member_use
-                color: selectedMenu == Menu.favourites
+              icon: Icon(
+                Icons.file_upload_outlined,
+                color: selectedMenu == Menu.upload
                     ? kPrimaryColor
                     : inActiveColor,
+                size: 28,
               ),
-              onPressed: () {},
+              onPressed: () async {
+                 if (selectedMenu == Menu.upload) return;
+
+                final tokenStorage = TokenStorage();
+                final token = await tokenStorage.getToken();
+
+                if (token != null) {
+                  Navigator.pushNamed(context, UploadScreen.routeName);
+                } else {
+                  Navigator.pushNamed(context, SignInScreen.routeName);
+                }
+              },
             ),
-            IconButton(
-              icon: SvgPicture.asset(
-                "assets/icons/Chat bubble Icon.svg",
-                // ignore: deprecated_member_use
-                color: selectedMenu == Menu.message
-                    ? kPrimaryColor
-                    : inActiveColor,
-              ),
-              onPressed: () {},
-            ),
-            // =======================================================
-            // === DI SINILAH LOKASI PERUBAHAN UTAMANYA ===
-            // =======================================================
             IconButton(
               icon: SvgPicture.asset(
                 "assets/icons/User Icon.svg",
@@ -87,26 +83,18 @@ class CustomBottomNavigationBar extends StatelessWidget {
                     : inActiveColor,
               ),
               onPressed: () async {
-                // 1. Jadikan fungsi ini async
-                // Jangan lakukan apa-apa jika sudah di halaman profile
                 if (selectedMenu == Menu.profile) return;
 
-                // 2. Buat instance TokenStorage dan cek tokennya
                 final tokenStorage = TokenStorage();
                 final token = await tokenStorage.getToken();
 
                 if (token != null) {
-                  // 3. Jika ADA token (sudah login), arahkan ke ProfileScreen
                   Navigator.pushNamed(context, ProfileScreen.routeName);
                 } else {
-                  // 4. Jika TIDAK ADA token (tamu), arahkan ke SignInScreen
                   Navigator.pushNamed(context, SignInScreen.routeName);
                 }
               },
             ),
-            // =======================================================
-            // === AKHIR DARI PERUBAHAN ===
-            // =======================================================
           ],
         ),
       ),

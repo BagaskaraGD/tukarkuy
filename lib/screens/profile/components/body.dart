@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tukarkuy/screens/home/home_screen.dart'; // <-- IMPORT BARU
 import 'package:tukarkuy/services/auth_service.dart'; // <-- IMPORT BARU
 import './profile_picture.dart';
+import './profile_edit.dart';
 import '../../../size_config.dart';
 import './profile_section_bar.dart';
 
@@ -17,31 +18,30 @@ class Body extends StatelessWidget {
           ProfilePicture(),
           SizedBox(height: getProportionateScreenHeight(60)),
           ProfileSectionButton(
-            text: "My Account",
+            text: "Ubah Profil",
             icon: "assets/icons/User Icon.svg",
-            press: () {},
+            press: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ProfileEditScreen()),
+              );
+            },
           ),
           SizedBox(height: getProportionateScreenHeight(20)),
           ProfileSectionButton(
-            text: "Notifications",
+            text: "Notifikasi",
             icon: "assets/icons/Bell.svg",
             press: () {},
           ),
           SizedBox(height: getProportionateScreenHeight(20)),
           ProfileSectionButton(
-            text: "Settings",
-            icon: "assets/icons/Settings.svg",
-            press: () {},
-          ),
-          SizedBox(height: getProportionateScreenHeight(20)),
-          ProfileSectionButton(
-            text: "Help Center",
+            text: "Tentang TukarKuy",
             icon: "assets/icons/Question mark.svg",
             press: () {},
           ),
           SizedBox(height: getProportionateScreenHeight(20)),
           ProfileSectionButton(
-            text: "Log Out",
+            text: "Keluar",
             icon: "assets/icons/Log out.svg",
             press: () async {
               try {

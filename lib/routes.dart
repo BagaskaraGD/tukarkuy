@@ -12,6 +12,8 @@ import './screens/forgot_password/forgot_password_screen.dart';
 import './screens/complete_profile/complete_profile_screen.dart';
 import './screens/product_details/product_details_screen.dart';
 
+import './screens/upload/upload_screen.dart';
+
 Map<String, WidgetBuilder> routes = {
   OTPScreen.routeName: (ctx) => OTPScreen(),
   CartScreen.routeName: (ctx) => CartScreen(),
@@ -24,4 +26,5 @@ Map<String, WidgetBuilder> routes = {
   ForgotPasswordScreen.routeName: (ctx) => ForgotPasswordScreen(),
   ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
   CompleteProfileScreen.routeName: (ctx) => CompleteProfileScreen(),
+  UploadScreen.routeName: (ctx) => UploadScreen(),
 };

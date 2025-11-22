@@ -1,50 +1,57 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../size_config.dart';
 
 class ProfilePicture extends StatelessWidget {
-  const ProfilePicture({Key? key}) : super(key: key);
+  const ProfilePicture({Key? key, this.imageFile, this.onImageSelect})
+    : super(key: key);
+
+  final File? imageFile;
+  final VoidCallback? onImageSelect;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        SizedBox(
-          width: getProportionateScreenWidth(120),
-          height: getProportionateScreenWidth(120),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(60),
-            child: Image.asset(
-              "assets/images/Profile Image.png",
-              fit: BoxFit.cover,
-              width: getProportionateScreenWidth(120),
+    return GestureDetector(
+      // klik di mana saja di area foto -> ganti foto
+      onTap: onImageSelect,
+      child: SizedBox(
+        height: getProportionateScreenWidth(115),
+        width: getProportionateScreenWidth(115),
+        child: Stack(
+          fit: StackFit.expand,
+          clipBehavior: Clip.none,
+          children: [
+            CircleAvatar(
+              backgroundImage: imageFile != null
+                  ? FileImage(imageFile!) as ImageProvider
+                  : const AssetImage("assets/images/Profile Image.png"),
             ),
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          right: -10,
-          child: SizedBox(
-            width: getProportionateScreenWidth(48),
-            height: getProportionateScreenWidth(48),
-            child: TextButton(
-              onPressed: () {},
-              child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(50),
+            if (onImageSelect != null)
+              Positioned(
+                right: -16,
+                bottom: 0,
+                child: SizedBox(
+                  height: 46,
+                  width: 46,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                        side: const BorderSide(color: Colors.white),
+                      ),
+                      backgroundColor: const Color(0xFFF5F6F9),
+                    ),
+                    onPressed: onImageSelect,
+                    child: SvgPicture.asset("assets/icons/Camera Icon.svg"),
                   ),
                 ),
-                backgroundColor: MaterialStateProperty.all(Color(0xFFF5F6F9)),
               ),
-            ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

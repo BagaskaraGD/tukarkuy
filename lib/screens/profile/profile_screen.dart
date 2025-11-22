@@ -12,12 +12,11 @@ class ProfileScreen extends StatelessWidget {
     SizeConfig().init(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Profile"),
-      ),
+      appBar: AppBar(title: Text("Profile")),
       body: Body(),
-      bottomNavigationBar:
-          CustomBottomNavigationBar(selectedMenu: Menu.profile),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        selectedMenu: Menu.profile,
+      ),
     );
   }
 }

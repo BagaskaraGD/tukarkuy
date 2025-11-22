@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:tukarkuy/utils/token_storage.dart'; // <-- IMPORT BARU
 
 class AuthService {
-  final String _baseUrl = "http://192.168.0.8:8000/api";
+  final String _baseUrl = "https://70dc0835574c.ngrok-free.app/api";
   final TokenStorage _tokenStorage = TokenStorage(); // <-- BUAT INSTANCE
 
   Future<bool> login(String email, String password) async {

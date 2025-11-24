@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:tukarkuy/utils/token_storage.dart';
+import 'package:tukarkuy/services/config.dart';
 
 class BarangService {
-  final String _baseUrl = "https://70dc0835574c.ngrok-free.app/api";
   final TokenStorage _tokenStorage = TokenStorage();
 
   Future<bool> createBarang({
@@ -21,7 +21,7 @@ class BarangService {
         return false;
       }
 
-      final uri = Uri.parse("$_baseUrl/barang");
+      final uri = Uri.parse("${Config.baseUrl}/barang");
       final request = http.MultipartRequest('POST', uri);
 
       // headers

@@ -3,15 +3,15 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tukarkuy/utils/token_storage.dart'; // <-- IMPORT BARU
+import 'package:tukarkuy/services/config.dart'; // <-- IMPORT CONFIG
 
 class AuthService {
-  final String _baseUrl = "https://70dc0835574c.ngrok-free.app/api";
   final TokenStorage _tokenStorage = TokenStorage(); // <-- BUAT INSTANCE
 
   Future<bool> login(String email, String password) async {
     try {
-      final response = await http.post(
-        Uri.parse('$_baseUrl/login'),
+final response = await http.post(
+        Uri.parse('${Config.baseUrl}/login'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',
@@ -70,8 +70,8 @@ class AuthService {
   }) async {
     // ... (kode register tidak perlu diubah)
     try {
-      final response = await http.post(
-        Uri.parse('$_baseUrl/register'),
+final response = await http.post(
+        Uri.parse('${Config.baseUrl}/register'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Accept': 'application/json',

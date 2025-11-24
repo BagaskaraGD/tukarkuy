@@ -5,5 +5,5 @@ class Config {
 
   Config._internal();
 
-  final String baseUrl = "http://127.0.0.1:8000/api";
+  static const String baseUrl = "https://5b246b52be0c.ngrok-free.app/api";
 }

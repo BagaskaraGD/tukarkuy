@@ -10,7 +10,7 @@ class AuthService {
 
   Future<bool> login(String email, String password) async {
     try {
-final response = await http.post(
+      final response = await http.post(
         Uri.parse('${Config.baseUrl}/login'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -70,7 +70,7 @@ final response = await http.post(
   }) async {
     // ... (kode register tidak perlu diubah)
     try {
-final response = await http.post(
+      final response = await http.post(
         Uri.parse('${Config.baseUrl}/register'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',

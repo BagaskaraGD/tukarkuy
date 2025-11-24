@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:tukarkuy/utils/token_storage.dart'; // <-- IMPORT BARU
 import 'package:tukarkuy/services/config.dart'; // <-- IMPORT CONFIG
+import 'package:tukarkuy/utils/user_storage.dart'; // <-- IMPORT USER STORAGE
 
 class AuthService {
   final TokenStorage _tokenStorage = TokenStorage(); // <-- BUAT INSTANCE
@@ -28,10 +29,30 @@ final response = await http.post(
 
         // 2. Ambil token (sesuaikan key 'token' jika berbeda di API kamu)
         final String? token = body['token'];
+        
+        // 3. Ambil user data (asumsi ada object 'user' atau 'data' yang berisi info user)
+        // Sesuaikan dengan response API login kamu. 
+        // Jika response login: { "success": true, "message": "...", "data": { "token": "...", "user": { "id": 1, ... } } }
+        // Maka sesuaikan parsingnya.
+        // Di sini saya asumsi response body langsung punya key 'user' atau 'data' -> 'user'
+        // Atau jika token ada di root, mungkin user juga ada di root.
+        // Cek kembali format response login kamu.
+        // SEMENTARA: Saya coba ambil 'user' dari body.
+        final userMap = body['user']; 
+        final int? userId = userMap != null ? userMap['id'] : null;
 
         if (token != null) {
           // 3. Simpan token menggunakan TokenStorage
           await _tokenStorage.saveToken(token);
+          
+          if (userId != null) {
+             final UserStorage _userStorage = UserStorage();
+             await _userStorage.saveUserId(userId);
+             print("User ID berhasil disimpan: $userId");
+          } else {
+             print("User ID tidak ditemukan di response login.");
+          }
+
           print("Token berhasil disimpan.");
           return true;
         } else {

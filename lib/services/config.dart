@@ -5,5 +5,5 @@ class Config {
 
   Config._internal();
 
-  static const String baseUrl = "https://d5a1d93e1afc.ngrok-free.app/api";
+  static const String baseUrl = "https://92c2b8a8e306.ngrok-free.app/api";
 }

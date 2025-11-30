@@ -6,6 +6,8 @@ import './cart_item_card.dart';
 import '../../../models/Cart.dart';
 
 class Body extends StatelessWidget {
+  const Body({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(

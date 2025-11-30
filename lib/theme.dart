@@ -40,7 +40,7 @@ TextTheme textTheme() {
 AppBarTheme appBarTheme() {
   return AppBarTheme(
     centerTitle: true,
-    color: Colors.white,
+    backgroundColor: Colors.white,
     elevation: 0,
     systemOverlayStyle: SystemUiOverlayStyle.light, // Ganti dari brightness
     iconTheme: IconThemeData(color: Colors.black),

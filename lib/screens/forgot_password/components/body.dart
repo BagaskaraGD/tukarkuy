@@ -6,6 +6,8 @@ import './forgot_password_form.dart';
 
 
 class Body extends StatelessWidget {
+  const Body({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

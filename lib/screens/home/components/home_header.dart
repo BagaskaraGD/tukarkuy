@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:tukarkuy/screens/cart/cart_screen.dart';
-
 import './search_field.dart';
 import '../../../size_config.dart';
 import './icon_button_with_counter.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({Key? key}) : super(key: key);
+  const HomeHeader({
+    super.key,
+    required this.onSearchChanged,
+    this.searchReadOnly = false,
+    this.onSearchTap,
+  });
+
+  final ValueChanged<String> onSearchChanged;
+  final bool searchReadOnly;
+  final VoidCallback? onSearchTap;
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +24,15 @@ class HomeHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SearchField(),
+          SearchField(
+            onChanged: onSearchChanged,
+            readOnly: searchReadOnly,
+            onTap: onSearchTap,
+          ),
           IconButtonWithCounter(
-            svgSrc: 'assets/icons/Cart Icon.svg',
+            svgSrc: 'assets/icons/Heart Icon.svg',
             noOfItems: 1,
-            press: () => Navigator.pushNamed(context, CartScreen.routeName),
+            press: () {},
           ),
           IconButtonWithCounter(
             svgSrc: 'assets/icons/Bell.svg',

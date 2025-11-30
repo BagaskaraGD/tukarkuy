@@ -4,7 +4,7 @@ import 'package:tukarkuy/screens/sign_up/sign_up_screen.dart';
 import '../constants.dart';
 
 class NoAccountText extends StatelessWidget {
-  const NoAccountText({Key? key}) : super(key: key);
+  const NoAccountText({super.key});
 
   @override
   Widget build(BuildContext context) {

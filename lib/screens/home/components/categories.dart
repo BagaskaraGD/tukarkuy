@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tukarkuy/constants.dart';
 
 import '../../../size_config.dart';
@@ -7,12 +6,34 @@ import '../../../size_config.dart';
 // ignore: must_be_immutable
 class Categories extends StatelessWidget {
   List<Map<String, dynamic>> categories = [
-    {"icon": "assets/icons/Flash Icon.svg", "text": "Flash Deal"},
-    {"icon": "assets/icons/Bill Icon.svg", "text": "Bill"},
-    {"icon": "assets/icons/Game Icon.svg", "text": "Game"},
-    {"icon": "assets/icons/Gift Icon.svg", "text": "Daily Gift"},
-    {"icon": "assets/icons/ellipsis.svg", "text": "More"},
+    {
+      "icon": Icons.electrical_services,
+      "text": "Elektronik",
+      "id": 1,
+    },
+    {
+      "icon": Icons.home_filled,
+      "text": "Alat Rumah Tangga",
+      "id": 2,
+    },
+    {
+      "icon": Icons.toys,
+      "text": "Hobi & Mainan",
+      "id": 3,
+    },
+    {
+      "icon": Icons.checkroom,
+      "text": "Fashion",
+      "id": 4,
+    },
+    {
+      "icon": Icons.shopping_basket,
+      "text": "Kebutuhan Harian",
+      "id": 5,
+    },
   ];
+
+  Categories({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +50,16 @@ class Categories extends StatelessWidget {
             (index) => CategoryCard(
               icon: categories[index]['icon'],
               text: categories[index]['text'],
-              press: () {},
+              press: () {
+                Navigator.pushNamed(
+                  context,
+                  '/barang-list',
+                  arguments: {
+                    'categoryId': categories[index]['id'],
+                    'categoryName': categories[index]['text'],
+                  },
+                );
+              },
             ),
           ),
         ],
@@ -40,13 +70,14 @@ class Categories extends StatelessWidget {
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.text,
     required this.press,
-  }) : super(key: key);
+  });
 
-  final String icon, text;
+  final IconData icon;
+  final String text;
   final GestureTapCallback press;
 
   @override
@@ -67,9 +98,10 @@ class CategoryCard extends StatelessWidget {
                   color: Color(0xFFDFECFF),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: SvgPicture.asset(
+                child: Icon(
                   icon,
                   color: kPrimaryColor.withOpacity(.8),
+                  size: getProportionateScreenWidth(22),
                 ),
               ),
             ),

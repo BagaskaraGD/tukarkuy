@@ -8,6 +8,8 @@ import 'package:tukarkuy/services/kategori_service.dart';
 import 'package:tukarkuy/models/Category.dart';
 
 class Body extends StatefulWidget {
+  const Body({super.key});
+
   @override
   _BodyState createState() => _BodyState();
 }
@@ -44,16 +46,16 @@ class _BodyState extends State<Body> {
         isLoadingCategories = false;
       });
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Gagal memuat kategori: $e")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Gagal memuat kategori: $e")));
       }
     }
   }
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       setState(() {
@@ -65,16 +67,16 @@ class _BodyState extends State<Body> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-if (selectedCategory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Silakan pilih kategori barang")),
-      );
+    if (selectedCategory == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Silakan pilih kategori barang")));
       return;
     }
 
     _formKey.currentState!.save();
 
-final success = await _barangService.createBarang(
+    final success = await _barangService.createBarang(
       namaBar: productName!,
       deskripsiBar: description!,
       stokBar: int.parse(stock!),
@@ -158,7 +160,7 @@ final success = await _barangService.createBarang(
                     children: [
                       buildProductNameFormField(),
                       SizedBox(height: getProportionateScreenHeight(20)),
-buildConditionDropdown(),
+                      buildConditionDropdown(),
                       SizedBox(height: getProportionateScreenHeight(20)),
                       buildCategoryDropdown(),
                       SizedBox(height: getProportionateScreenHeight(20)),
@@ -233,9 +235,9 @@ buildConditionDropdown(),
     );
   }
 
-DropdownButtonFormField<String> buildConditionDropdown() {
+  DropdownButtonFormField<String> buildConditionDropdown() {
     return DropdownButtonFormField<String>(
-      value: condition,
+      initialValue: condition,
       items: conditions.map((String value) {
         return DropdownMenuItem<String>(value: value, child: Text(value));
       }).toList(),
@@ -269,11 +271,13 @@ DropdownButtonFormField<String> buildConditionDropdown() {
           child: Text(category.namaKategori),
         );
       }).toList(),
-      onChanged: isLoadingCategories ? null : (newValue) {
-        setState(() {
-          selectedCategory = newValue;
-        });
-      },
+      onChanged: isLoadingCategories
+          ? null
+          : (newValue) {
+              setState(() {
+                selectedCategory = newValue;
+              });
+            },
       decoration: InputDecoration(
         labelText: "Pilih Kategori Barang",
         floatingLabelBehavior: FloatingLabelBehavior.always,

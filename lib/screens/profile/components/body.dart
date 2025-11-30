@@ -7,6 +7,8 @@ import '../../../size_config.dart';
 import './profile_section_bar.dart';
 
 class Body extends StatelessWidget {
+  const Body({super.key});
+
   @override
   Widget build(BuildContext context) {
     final AuthService authService = AuthService();

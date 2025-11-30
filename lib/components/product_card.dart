@@ -7,12 +7,12 @@ import '../models/Product.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
-    Key? key,
+    super.key,
     this.width = 140,
     this.aspectRatio = 1.02,
     required this.product,
     required this.press,
-  }) : super(key: key);
+  });
 
   final Product product;
   final double width, aspectRatio;
@@ -41,7 +41,7 @@ class ProductCard extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                "${product.title}",
+                product.title,
                 style: TextStyle(color: Colors.black),
                 textAlign: TextAlign.center,
                 maxLines: 2,

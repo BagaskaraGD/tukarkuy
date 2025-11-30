@@ -4,10 +4,10 @@ import '../../../constants.dart';
 
 class BuildDot extends StatelessWidget {
   const BuildDot({
-    Key? key,
+    super.key,
     required this.pageNumber,
     required this.currentPage,
-  }) : super(key: key);
+  });
 
   final int pageNumber, currentPage;
 

@@ -13,6 +13,7 @@ import './screens/complete_profile/complete_profile_screen.dart';
 import './screens/product_details/product_details_screen.dart';
 
 import './screens/upload/upload_screen.dart';
+import './screens/barang_list/barang_list_screen.dart';
 
 Map<String, WidgetBuilder> routes = {
   OTPScreen.routeName: (ctx) => OTPScreen(),
@@ -27,4 +28,5 @@ Map<String, WidgetBuilder> routes = {
   ProductDetailsScreen.routeName: (ctx) => ProductDetailsScreen(),
   CompleteProfileScreen.routeName: (ctx) => CompleteProfileScreen(),
   UploadScreen.routeName: (ctx) => UploadScreen(),
+  BarangListScreen.routeName: (ctx) => const BarangListScreen(),
 };

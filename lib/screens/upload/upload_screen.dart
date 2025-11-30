@@ -5,6 +5,8 @@ import 'components/body.dart';
 
 class UploadScreen extends StatelessWidget {
   static const routeName = "/upload";
+
+  const UploadScreen({super.key});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

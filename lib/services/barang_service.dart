@@ -7,11 +7,12 @@ import 'package:tukarkuy/services/config.dart';
 class BarangService {
   final TokenStorage _tokenStorage = TokenStorage();
 
-  Future<bool> createBarang({
+Future<bool> createBarang({
     required String namaBar,
     required String deskripsiBar,
     required int stokBar,
     required String kondisi,
+    required int kategoriId,
     File? imageFile,
   }) async {
     try {
@@ -31,10 +32,11 @@ class BarangService {
       });
 
       // field biasa
-      request.fields['nama_bar'] = namaBar;
+request.fields['nama_bar'] = namaBar;
       request.fields['deskripsi_bar'] = deskripsiBar;
       request.fields['stok_bar'] = stokBar.toString();
       request.fields['kondisi'] = kondisi; // kalau kamu pakai kolom ini di DB
+      request.fields['id_kategori'] = kategoriId.toString();
 
       // file (opsional)
       if (imageFile != null) {

@@ -237,7 +237,7 @@ class _BodyState extends State<Body> {
 
   DropdownButtonFormField<String> buildConditionDropdown() {
     return DropdownButtonFormField<String>(
-      initialValue: condition,
+      value: condition,
       items: conditions.map((String value) {
         return DropdownMenuItem<String>(value: value, child: Text(value));
       }).toList(),
@@ -320,3 +320,5 @@ class _BodyState extends State<Body> {
     );
   }
 }
+
+//

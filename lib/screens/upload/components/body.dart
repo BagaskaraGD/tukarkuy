@@ -4,6 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:tukarkuy/size_config.dart';
 import 'package:tukarkuy/components/default_button.dart';
 import 'package:tukarkuy/services/barang_service.dart';
+import 'package:tukarkuy/services/kategori_service.dart';
+import 'package:tukarkuy/models/Category.dart';
 
 class Body extends StatefulWidget {
   const Body({super.key});
@@ -15,12 +17,41 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   final _formKey = GlobalKey<FormState>();
   final BarangService _barangService = BarangService();
+  final KategoriService _kategoriService = KategoriService();
   File? _image;
   String? productName;
   String? condition = 'Baru';
   String? description;
   String? stock;
+  Category? selectedCategory;
+  List<Category> categories = [];
+  bool isLoadingCategories = true;
   final List<String> conditions = ['Baru', 'Bekas'];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadCategories();
+  }
+
+  Future<void> _loadCategories() async {
+    try {
+      final categoryList = await _kategoriService.getCategories();
+      setState(() {
+        categories = categoryList;
+        isLoadingCategories = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingCategories = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Gagal memuat kategori: $e")));
+      }
+    }
+  }
 
   Future<void> _pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -36,10 +67,10 @@ class _BodyState extends State<Body> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_image != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Silakan upload foto barang terlebih dahulu")),
-      );
+    if (selectedCategory == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Silakan pilih kategori barang")));
       return;
     }
 
@@ -50,6 +81,7 @@ class _BodyState extends State<Body> {
       deskripsiBar: description!,
       stokBar: int.parse(stock!),
       kondisi: condition ?? 'Baru',
+      kategoriId: selectedCategory!.id,
       imageFile: _image,
     );
 
@@ -129,6 +161,8 @@ class _BodyState extends State<Body> {
                       buildProductNameFormField(),
                       SizedBox(height: getProportionateScreenHeight(20)),
                       buildConditionDropdown(),
+                      SizedBox(height: getProportionateScreenHeight(20)),
+                      buildCategoryDropdown(),
                       SizedBox(height: getProportionateScreenHeight(20)),
                       buildDescriptionFormField(),
                       SizedBox(height: getProportionateScreenHeight(20)),
@@ -214,6 +248,38 @@ class _BodyState extends State<Body> {
       },
       decoration: InputDecoration(
         labelText: "Pilih Kondisi Barang",
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Color(0xFFBDBDBD)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(color: Color(0xFFBDBDBD)),
+        ),
+      ),
+    );
+  }
+
+  DropdownButtonFormField<Category> buildCategoryDropdown() {
+    return DropdownButtonFormField<Category>(
+      value: selectedCategory,
+      items: categories.map((Category category) {
+        return DropdownMenuItem<Category>(
+          value: category,
+          child: Text(category.namaKategori),
+        );
+      }).toList(),
+      onChanged: isLoadingCategories
+          ? null
+          : (newValue) {
+              setState(() {
+                selectedCategory = newValue;
+              });
+            },
+      decoration: InputDecoration(
+        labelText: "Pilih Kategori Barang",
         floatingLabelBehavior: FloatingLabelBehavior.always,
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         enabledBorder: OutlineInputBorder(

@@ -54,6 +54,7 @@ class BarangService {
     required String deskripsiBar,
     required int stokBar,
     required String kondisi,
+    required int kategoriId,
     File? imageFile,
   }) async {
     try {
@@ -77,6 +78,7 @@ class BarangService {
       request.fields['deskripsi_bar'] = deskripsiBar;
       request.fields['stok_bar'] = stokBar.toString();
       request.fields['kondisi'] = kondisi; // kalau kamu pakai kolom ini di DB
+      request.fields['id_kategori'] = kategoriId.toString();
 
       // file (opsional)
       if (imageFile != null) {
@@ -106,3 +108,4 @@ class BarangService {
     }
   }
 }
+

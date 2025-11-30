@@ -7,6 +7,8 @@ import '../../components/custom_bottom_navigation_bar.dart';
 class ProfileScreen extends StatelessWidget {
   static const routeName = "/profile";
 
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

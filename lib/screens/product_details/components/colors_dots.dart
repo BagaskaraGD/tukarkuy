@@ -6,7 +6,7 @@ import '../../../models/Product.dart';
 import '../../../components/rounded_icon_button.dart';
 
 class ColorDots extends StatefulWidget {
-  ColorDots({Key? key, required this.product}) : super(key: key);
+  const ColorDots({super.key, required this.product});
 
   final Product product;
 
@@ -46,8 +46,7 @@ class _ColorDotsState extends State<ColorDots> {
 }
 
 class ColorDot extends StatelessWidget {
-  const ColorDot({Key? key, required this.color, this.isSelected = false})
-    : super(key: key);
+  const ColorDot({super.key, required this.color, this.isSelected = false});
 
   final Color color;
   final bool isSelected;

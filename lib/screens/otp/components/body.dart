@@ -7,7 +7,7 @@ import '../../../components/default_button.dart';
 
 class Body extends StatelessWidget {
   final String phone;
-  Body(this.phone);
+  const Body(this.phone, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class Body extends StatelessWidget {
               children: [
                 SizedBox(height: SizeConfig.screenHeight * 0.05),
                 Text("OTP Verification", style: headingStyle),
-                Text("We sent your code to ${this.phone}",
+                Text("We sent your code to $phone",
                     textAlign: TextAlign.center),
                 buildTimer(),
                 SizedBox(height: SizeConfig.screenHeight * 0.1),

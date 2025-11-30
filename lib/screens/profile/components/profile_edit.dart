@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tukarkuy/models/user_model.dart';
-import 'package:tukarkuy/services/user_service.dart';
 import '../../../size_config.dart';
 import 'profile_picture.dart';
 
 class ProfileEditScreen extends StatelessWidget {
   static const routeName = "/profile_edit";
+
+  const ProfileEditScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +18,7 @@ class ProfileEditScreen extends StatelessWidget {
           padding: EdgeInsets.all(getProportionateScreenWidth(20)),
           child: Column(
             children: [
+              // ProfilePicture removed from here
               SizedBox(height: getProportionateScreenHeight(20)),
               ProfileEditForm(),
             ],
@@ -29,6 +30,8 @@ class ProfileEditScreen extends StatelessWidget {
 }
 
 class ProfileEditForm extends StatefulWidget {
+  const ProfileEditForm({super.key});
+
   @override
   _ProfileEditFormState createState() => _ProfileEditFormState();
 }
@@ -36,59 +39,14 @@ class ProfileEditForm extends StatefulWidget {
 class _ProfileEditFormState extends State<ProfileEditForm> {
   final _formKey = GlobalKey<FormState>();
   final List<String> errors = [];
-  final UserService _userService = UserService();
-  
   String? name;
   String? phoneNumber;
   String? address;
   File? _image;
-  bool _isLoading = false;
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserData();
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _phoneController.dispose();
-    _addressController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _fetchUserData() async {
-    setState(() {
-      _isLoading = true;
-    });
-    
-    UserModel? user = await _userService.getUser();
-    
-    if (user != null) {
-      setState(() {
-        name = user.name;
-        phoneNumber = user.noWa;
-        address = user.alamat;
-        
-        _nameController.text = user.name;
-        _phoneController.text = user.noWa ?? "";
-        _addressController.text = user.alamat ?? "";
-      });
-    }
-    
-    setState(() {
-      _isLoading = false;
-    });
-  }
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       setState(() {
@@ -98,57 +56,23 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
   }
 
   void addError({String? error}) {
-    if (!errors.contains(error))
+    if (!errors.contains(error)) {
       setState(() {
         errors.add(error!);
       });
+    }
   }
 
   void removeError({String? error}) {
-    if (errors.contains(error))
+    if (errors.contains(error)) {
       setState(() {
         errors.remove(error);
       });
-  }
-
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      
-      setState(() {
-        _isLoading = true;
-      });
-
-      bool success = await _userService.updateUser(
-        name: name!,
-        noWa: phoneNumber!,
-        alamat: address!,
-        fotoProfil: _image,
-      );
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Profil berhasil diperbarui")),
-        );
-        Navigator.pop(context);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Gagal memperbarui profil")),
-        );
-      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
-    }
-
     return Form(
       key: _formKey,
       child: Column(
@@ -174,7 +98,18 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
                 ),
                 backgroundColor: Color(0xFFFF7643),
               ),
-              onPressed: _submitForm,
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  // Implement save functionality here
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Profil berhasil diperbarui (Simulasi)"),
+                    ),
+                  );
+                  Navigator.pop(context);
+                }
+              },
               child: Text(
                 "Simpan",
                 style: TextStyle(
@@ -191,13 +126,12 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
 
   TextFormField buildAddressFormField() {
     return TextFormField(
-      controller: _addressController,
       onSaved: (newValue) => address = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: "Masukkan alamat Anda");
         }
-        return null;
+        return;
       },
       validator: (value) {
         if (value!.isEmpty) {
@@ -217,14 +151,13 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
 
   TextFormField buildPhoneNumberFormField() {
     return TextFormField(
-      controller: _phoneController,
       keyboardType: TextInputType.phone,
       onSaved: (newValue) => phoneNumber = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: "Masukkan nomor WhatsApp");
         }
-        return null;
+        return;
       },
       validator: (value) {
         if (value!.isEmpty) {
@@ -244,13 +177,12 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
 
   TextFormField buildNameFormField() {
     return TextFormField(
-      controller: _nameController,
       onSaved: (newValue) => name = newValue,
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: "Masukkan nama Anda");
         }
-        return null;
+        return;
       },
       validator: (value) {
         if (value!.isEmpty) {
@@ -268,4 +200,3 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
     );
   }
 }
-

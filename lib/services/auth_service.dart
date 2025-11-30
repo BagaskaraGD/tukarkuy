@@ -11,7 +11,7 @@ class AuthService {
 
   Future<bool> login(String email, String password) async {
     try {
-final response = await http.post(
+      final response = await http.post(
         Uri.parse('${Config.baseUrl}/login'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -29,28 +29,28 @@ final response = await http.post(
 
         // 2. Ambil token (sesuaikan key 'token' jika berbeda di API kamu)
         final String? token = body['token'];
-        
+
         // 3. Ambil user data (asumsi ada object 'user' atau 'data' yang berisi info user)
-        // Sesuaikan dengan response API login kamu. 
+        // Sesuaikan dengan response API login kamu.
         // Jika response login: { "success": true, "message": "...", "data": { "token": "...", "user": { "id": 1, ... } } }
         // Maka sesuaikan parsingnya.
         // Di sini saya asumsi response body langsung punya key 'user' atau 'data' -> 'user'
         // Atau jika token ada di root, mungkin user juga ada di root.
         // Cek kembali format response login kamu.
         // SEMENTARA: Saya coba ambil 'user' dari body.
-        final userMap = body['user']; 
+        final userMap = body['user'];
         final int? userId = userMap != null ? userMap['id'] : null;
 
         if (token != null) {
           // 3. Simpan token menggunakan TokenStorage
           await _tokenStorage.saveToken(token);
-          
+
           if (userId != null) {
-             final UserStorage _userStorage = UserStorage();
-             await _userStorage.saveUserId(userId);
-             print("User ID berhasil disimpan: $userId");
+            final UserStorage userStorage = UserStorage();
+            await userStorage.saveUserId(userId);
+            print("User ID berhasil disimpan: $userId");
           } else {
-             print("User ID tidak ditemukan di response login.");
+            print("User ID tidak ditemukan di response login.");
           }
 
           print("Token berhasil disimpan.");
@@ -91,7 +91,7 @@ final response = await http.post(
   }) async {
     // ... (kode register tidak perlu diubah)
     try {
-final response = await http.post(
+      final response = await http.post(
         Uri.parse('${Config.baseUrl}/register'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',

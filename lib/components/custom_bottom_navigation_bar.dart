@@ -11,8 +11,7 @@ import '../constants.dart';
 enum Menu { home, upload, profile }
 
 class CustomBottomNavigationBar extends StatelessWidget {
-  const CustomBottomNavigationBar({Key? key, required this.selectedMenu})
-    : super(key: key);
+  const CustomBottomNavigationBar({super.key, required this.selectedMenu});
 
   final Menu selectedMenu;
   final Color inActiveColor = const Color(0xFFADADAD);

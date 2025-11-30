@@ -5,8 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../size_config.dart';
 
 class ProfilePicture extends StatelessWidget {
-  const ProfilePicture({Key? key, this.imageFile, this.onImageSelect})
-    : super(key: key);
+  const ProfilePicture({super.key, this.imageFile, this.onImageSelect});
 
   final File? imageFile;
   final VoidCallback? onImageSelect;

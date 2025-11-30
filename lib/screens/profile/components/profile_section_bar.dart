@@ -6,11 +6,11 @@ import '../../../size_config.dart';
 
 class ProfileSectionButton extends StatelessWidget {
   const ProfileSectionButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.icon,
     required this.press,
-  }) : super(key: key);
+  });
 
   final String text, icon;
   final GestureTapCallback press;
@@ -23,9 +23,9 @@ class ProfileSectionButton extends StatelessWidget {
       ),
       child: TextButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Color(0xFFF2F6F5)),
-          padding: MaterialStateProperty.all(EdgeInsets.all(20)),
-          shape: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(Color(0xFFF2F6F5)),
+          padding: WidgetStateProperty.all(EdgeInsets.all(20)),
+          shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
         ),

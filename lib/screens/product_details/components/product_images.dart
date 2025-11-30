@@ -5,7 +5,7 @@ import '../../../size_config.dart';
 import '../../../models/Product.dart';
 
 class ProductImages extends StatefulWidget {
-  const ProductImages({Key? key, required this.product}) : super(key: key);
+  const ProductImages({super.key, required this.product});
 
   final Product product;
 

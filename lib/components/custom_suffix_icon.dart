@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../size_config.dart';
 
 class CustomSuffixIcon extends StatelessWidget {
-  const CustomSuffixIcon({Key? key, required this.iconPath}) : super(key: key);
+  const CustomSuffixIcon({super.key, required this.iconPath});
 
   final String iconPath;
 

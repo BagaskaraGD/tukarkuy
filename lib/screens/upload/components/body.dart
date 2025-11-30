@@ -6,6 +6,8 @@ import 'package:tukarkuy/components/default_button.dart';
 import 'package:tukarkuy/services/barang_service.dart';
 
 class Body extends StatefulWidget {
+  const Body({super.key});
+
   @override
   _BodyState createState() => _BodyState();
 }
@@ -21,8 +23,8 @@ class _BodyState extends State<Body> {
   final List<String> conditions = ['Baru', 'Bekas'];
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       setState(() {
@@ -201,7 +203,7 @@ class _BodyState extends State<Body> {
 
   DropdownButtonFormField<String> buildConditionDropdown() {
     return DropdownButtonFormField<String>(
-      value: condition,
+      initialValue: condition,
       items: conditions.map((String value) {
         return DropdownMenuItem<String>(value: value, child: Text(value));
       }).toList(),

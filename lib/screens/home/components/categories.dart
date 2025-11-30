@@ -14,6 +14,8 @@ class Categories extends StatelessWidget {
     {"icon": "assets/icons/ellipsis.svg", "text": "More"},
   ];
 
+  Categories({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,11 +42,11 @@ class Categories extends StatelessWidget {
 
 class CategoryCard extends StatelessWidget {
   const CategoryCard({
-    Key? key,
+    super.key,
     required this.icon,
     required this.text,
     required this.press,
-  }) : super(key: key);
+  });
 
   final String icon, text;
   final GestureTapCallback press;

@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:tukarkuy/screens/home/home_screen.dart';
-import 'package:tukarkuy/screens/profile/profile_screen.dart';
 import 'package:tukarkuy/screens/splash_screen/splash_screen.dart';
 import 'package:tukarkuy/utils/token_storage.dart';
 

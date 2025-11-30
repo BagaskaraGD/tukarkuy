@@ -4,7 +4,7 @@ import '../../../constants.dart';
 import '../../../size_config.dart';
 
 class CartItemCard extends StatelessWidget {
-  const CartItemCard({Key? key, @required this.cartItem}) : super(key: key);
+  const CartItemCard({super.key, @required this.cartItem});
 
   final cartItem;
 

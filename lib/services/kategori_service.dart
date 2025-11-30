@@ -24,12 +24,14 @@ class KategoriService {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        
+
         if (responseData['success'] == true) {
           final List<dynamic> categoriesData = responseData['data'];
           return categoriesData.map((json) => Category.fromJson(json)).toList();
         } else {
-          throw Exception(responseData['message'] ?? 'Failed to load categories');
+          throw Exception(
+            responseData['message'] ?? 'Failed to load categories',
+          );
         }
       } else {
         throw Exception('Failed to load categories: ${response.statusCode}');
@@ -40,3 +42,5 @@ class KategoriService {
     }
   }
 }
+
+//

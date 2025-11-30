@@ -1,11 +1,51 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:tukarkuy/utils/token_storage.dart';
 import 'package:tukarkuy/services/config.dart';
+import 'dart:convert';
+import 'package:tukarkuy/models/barang.dart';
 
 class BarangService {
   final TokenStorage _tokenStorage = TokenStorage();
+
+  Future<List<Barang>> fetchBarangList() async {
+    try {
+      final token = await _tokenStorage.getToken();
+      if (token == null) {
+        print("Token tidak ditemukan, user belum login.");
+        return [];
+      }
+
+      final uri = Uri.parse("${Config.baseUrl}/barang");
+      final response = await http.get(
+        uri,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final body = json.decode(response.body);
+        final List data = body['data'] ?? [];
+        return data.map((item) => Barang.fromJson(item)).toList();
+      } else {
+        print(
+          "fetchBarangList failed: ${response.statusCode} ${response.body}",
+        );
+        return [];
+      }
+    } catch (e) {
+      print("Error fetchBarangList: $e");
+      return [];
+    }
+  }
+
+  String? buildImageUrl(String? fotoPath) {
+    if (fotoPath == null || fotoPath.isEmpty) return null;
+    final base = Config.baseUrl.replaceFirst(RegExp(r'/api/?$'), '');
+    return "$base/storage/$fotoPath";
+  }
 
   Future<bool> createBarang({
     required String namaBar,

@@ -5,6 +5,8 @@ import 'package:tukarkuy/screens/home/home_screen.dart';
 import 'package:tukarkuy/size_config.dart';
 
 class Body extends StatelessWidget {
+  const Body({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(

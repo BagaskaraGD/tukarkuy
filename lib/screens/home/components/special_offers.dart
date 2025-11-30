@@ -4,7 +4,7 @@ import './section_title.dart';
 import '../../../size_config.dart';
 
 class SpecialOffers extends StatelessWidget {
-  const SpecialOffers({Key? key}) : super(key: key);
+  const SpecialOffers({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +39,12 @@ class SpecialOffers extends StatelessWidget {
 
 class SpecialOfferCard extends StatelessWidget {
   const SpecialOfferCard({
-    Key? key,
+    super.key,
     required this.noOfBrands,
     required this.image,
     required this.text,
     required this.press,
-  }) : super(key: key);
+  });
 
   final int noOfBrands;
   final String image, text;

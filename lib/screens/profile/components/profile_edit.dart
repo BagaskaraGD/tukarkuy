@@ -7,6 +7,8 @@ import 'profile_picture.dart';
 class ProfileEditScreen extends StatelessWidget {
   static const routeName = "/profile_edit";
 
+  const ProfileEditScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +30,8 @@ class ProfileEditScreen extends StatelessWidget {
 }
 
 class ProfileEditForm extends StatefulWidget {
+  const ProfileEditForm({super.key});
+
   @override
   _ProfileEditFormState createState() => _ProfileEditFormState();
 }
@@ -41,8 +45,8 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
   File? _image;
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       setState(() {
@@ -52,17 +56,19 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
   }
 
   void addError({String? error}) {
-    if (!errors.contains(error))
+    if (!errors.contains(error)) {
       setState(() {
         errors.add(error!);
       });
+    }
   }
 
   void removeError({String? error}) {
-    if (errors.contains(error))
+    if (errors.contains(error)) {
       setState(() {
         errors.remove(error);
       });
+    }
   }
 
   @override
@@ -125,7 +131,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
         if (value.isNotEmpty) {
           removeError(error: "Masukkan alamat Anda");
         }
-        return null;
+        return;
       },
       validator: (value) {
         if (value!.isEmpty) {
@@ -151,7 +157,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
         if (value.isNotEmpty) {
           removeError(error: "Masukkan nomor WhatsApp");
         }
-        return null;
+        return;
       },
       validator: (value) {
         if (value!.isEmpty) {
@@ -176,7 +182,7 @@ class _ProfileEditFormState extends State<ProfileEditForm> {
         if (value.isNotEmpty) {
           removeError(error: "Masukkan nama Anda");
         }
-        return null;
+        return;
       },
       validator: (value) {
         if (value!.isEmpty) {

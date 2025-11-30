@@ -7,6 +7,8 @@ import '../../../components/social_card.dart';
 import '../../../components/no_account_text.dart';
 
 class Body extends StatelessWidget {
+  const Body({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

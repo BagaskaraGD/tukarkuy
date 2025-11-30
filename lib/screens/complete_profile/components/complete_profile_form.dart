@@ -7,6 +7,8 @@ import '../../../components/default_button.dart';
 import '../../../components/custom_suffix_icon.dart';
 
 class CompleteProfileForm extends StatefulWidget {
+  const CompleteProfileForm({super.key});
+
   @override
   _SignFormState createState() => _SignFormState();
 }

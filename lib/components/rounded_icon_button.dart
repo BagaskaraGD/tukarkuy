@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../size_config.dart';
 
 class RoundedIconButton extends StatelessWidget {
-  const RoundedIconButton({Key? key, required this.icon, required this.press})
-    : super(key: key);
+  const RoundedIconButton({super.key, required this.icon, required this.press});
 
   final icon;
   final GestureTapCallback press;
@@ -16,13 +15,13 @@ class RoundedIconButton extends StatelessWidget {
       height: getProportionateScreenHeight(40),
       child: TextButton(
         onPressed: press,
-        child: Icon(icon, color: Colors.black),
         style: ButtonStyle(
-          shape: MaterialStateProperty.all(
+          shape: WidgetStateProperty.all(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
           ),
-          backgroundColor: MaterialStateProperty.all(Colors.white),
+          backgroundColor: WidgetStateProperty.all(Colors.white),
         ),
+        child: Icon(icon, color: Colors.black),
       ),
     );
   }

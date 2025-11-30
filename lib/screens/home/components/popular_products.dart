@@ -2,16 +2,25 @@ import 'package:flutter/material.dart';
 
 import './section_title.dart';
 import '../../../size_config.dart';
+import '../../../services/barang_service.dart';
+import '../../../models/barang.dart';
 
-const List<Map<String, String>> _recommendedItems = [
-  {"title": "Helm Sepeda", "condition": "Bekas - Kondisi Baik"},
-  {"title": "Stick PS4", "condition": "Bekas - Kondisi Baik"},
-  {"title": "Helm Sepeda", "condition": "Bekas - Kondisi Baik"},
-  {"title": "Stick PS4", "condition": "Bekas - Kondisi Baik"},
-];
+class PopularProducts extends StatefulWidget {
+  const PopularProducts({super.key});
 
-class PopularProducts extends StatelessWidget {
-  const PopularProducts({Key? key}) : super(key: key);
+  @override
+  State<PopularProducts> createState() => _PopularProductsState();
+}
+
+class _PopularProductsState extends State<PopularProducts> {
+  final BarangService _barangService = BarangService();
+  late Future<List<Barang>> _futureBarang;
+
+  @override
+  void initState() {
+    super.initState();
+    _futureBarang = _barangService.fetchBarangList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,21 +33,59 @@ class PopularProducts extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: getProportionateScreenWidth(20),
           ),
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: getProportionateScreenHeight(14),
-              crossAxisSpacing: getProportionateScreenWidth(14),
-              childAspectRatio: .9,
-            ),
-            itemCount: _recommendedItems.length,
-            itemBuilder: (context, index) {
-              final item = _recommendedItems[index];
-              return RecommendationCard(
-                title: item['title'] ?? '',
-                condition: item['condition'] ?? '',
+          child: FutureBuilder<List<Barang>>(
+            future: _futureBarang,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Padding(
+                  padding:
+                      EdgeInsets.only(top: getProportionateScreenHeight(20)),
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return Padding(
+                  padding:
+                      EdgeInsets.only(top: getProportionateScreenHeight(10)),
+                  child: Text(
+                    "Gagal memuat barang",
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                );
+              }
+
+              final items = snapshot.data ?? [];
+              if (items.isEmpty) {
+                return Padding(
+                  padding:
+                      EdgeInsets.only(top: getProportionateScreenHeight(10)),
+                  child: Text(
+                    "Belum ada barang.",
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                );
+              }
+
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: getProportionateScreenHeight(14),
+                  crossAxisSpacing: getProportionateScreenWidth(14),
+                  childAspectRatio: .9,
+                ),
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final item = items[index];
+                  final imageUrl = _barangService.buildImageUrl(item.fotoPath);
+                  return RecommendationCard(
+                    title: item.nama,
+                    condition: item.kondisi,
+                    imageUrl: imageUrl,
+                  );
+                },
               );
             },
           ),
@@ -50,13 +97,15 @@ class PopularProducts extends StatelessWidget {
 
 class RecommendationCard extends StatelessWidget {
   const RecommendationCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.condition,
-  }) : super(key: key);
+    required this.imageUrl,
+  });
 
   final String title;
   final String condition;
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +127,20 @@ class RecommendationCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: const Color(0xFFE5E7EB)),
             ),
-            child: Icon(
-              Icons.image_outlined,
-              color: Colors.grey.shade400,
-              size: getProportionateScreenWidth(28),
-            ),
+            child: imageUrl != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      imageUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => _placeholderIcon(),
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return _placeholderIcon();
+                      },
+                    ),
+                  )
+                : _placeholderIcon(),
           ),
           SizedBox(height: getProportionateScreenHeight(10)),
           Text(
@@ -97,7 +155,7 @@ class RecommendationCard extends StatelessWidget {
           ),
           SizedBox(height: getProportionateScreenHeight(4)),
           Text(
-            condition,
+            condition.isNotEmpty ? condition : "Kondisi tidak diketahui",
             style: TextStyle(
               color: Colors.grey.shade600,
               fontSize: getProportionateScreenWidth(12),
@@ -108,6 +166,14 @@ class RecommendationCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _placeholderIcon() {
+    return Icon(
+      Icons.image_outlined,
+      color: Colors.grey.shade400,
+      size: getProportionateScreenWidth(28),
     );
   }
 }

@@ -7,6 +7,8 @@ import '../../../components/no_account_text.dart';
 import '../../../components/custom_suffix_icon.dart';
 
 class ForgotPasswordForm extends StatefulWidget {
+  const ForgotPasswordForm({super.key});
+
   @override
   _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
 }

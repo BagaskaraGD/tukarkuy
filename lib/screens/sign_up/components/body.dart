@@ -6,6 +6,8 @@ import '../../../size_config.dart';
 import '../../../components/social_card.dart';
 
 class Body extends StatelessWidget {
+  const Body({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

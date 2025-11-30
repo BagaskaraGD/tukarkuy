@@ -6,7 +6,20 @@ import '../../../services/barang_service.dart';
 import '../../../models/barang.dart';
 
 class PopularProducts extends StatefulWidget {
-  const PopularProducts({super.key});
+  const PopularProducts({
+    super.key,
+    required this.searchQuery,
+    this.title = "Rekomendasi Barang",
+    this.showHeader = true,
+    this.maxItems,
+    this.categoryId,
+  });
+
+  final String searchQuery;
+  final String title;
+  final bool showHeader;
+  final int? maxItems;
+  final int? categoryId;
 
   @override
   State<PopularProducts> createState() => _PopularProductsState();
@@ -19,16 +32,34 @@ class _PopularProductsState extends State<PopularProducts> {
   @override
   void initState() {
     super.initState();
-    _futureBarang = _barangService.fetchBarangList();
+    _futureBarang = _barangService.fetchBarangList(
+      categoryId: widget.categoryId,
+    );
+  }
+
+  @override
+  void didUpdateWidget(covariant PopularProducts oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.categoryId != widget.categoryId) {
+      setState(() {
+        _futureBarang = _barangService.fetchBarangList(
+          categoryId: widget.categoryId,
+        );
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final query = widget.searchQuery.toLowerCase().trim();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SectionTitle(title: "Rekomendasi Barang", press: () {}),
-        SizedBox(height: getProportionateScreenHeight(14)),
+        if (widget.showHeader) ...[
+          SectionTitle(title: widget.title, press: () {}),
+          SizedBox(height: getProportionateScreenHeight(14)),
+        ],
         Padding(
           padding: EdgeInsets.symmetric(
             horizontal: getProportionateScreenWidth(20),
@@ -56,12 +87,36 @@ class _PopularProductsState extends State<PopularProducts> {
               }
 
               final items = snapshot.data ?? [];
-              if (items.isEmpty) {
+
+              // Filter by category if provided (safeguard when backend ignores query).
+              final byCategory = widget.categoryId == null
+                  ? items
+                  : items
+                      .where((item) => item.categoryId == widget.categoryId)
+                      .toList();
+
+              // Apply search filter.
+              final filtered = query.isEmpty
+                  ? byCategory
+                  : byCategory
+                      .where((item) =>
+                          item.nama.toLowerCase().contains(query) ||
+                          item.deskripsi?.toLowerCase().contains(query) ==
+                              true)
+                      .toList();
+
+              final limited = widget.maxItems != null
+                  ? filtered.take(widget.maxItems!).toList()
+                  : filtered;
+
+              if (limited.isEmpty) {
                 return Padding(
                   padding:
                       EdgeInsets.only(top: getProportionateScreenHeight(10)),
                   child: Text(
-                    "Belum ada barang.",
+                    query.isEmpty
+                        ? "Belum ada barang."
+                        : "Tidak ada barang yang cocok.",
                     style: TextStyle(color: Colors.grey.shade600),
                   ),
                 );
@@ -74,11 +129,11 @@ class _PopularProductsState extends State<PopularProducts> {
                   crossAxisCount: 2,
                   mainAxisSpacing: getProportionateScreenHeight(14),
                   crossAxisSpacing: getProportionateScreenWidth(14),
-                  childAspectRatio: .9,
+                  childAspectRatio: .78,
                 ),
-                itemCount: items.length,
+                itemCount: limited.length,
                 itemBuilder: (context, index) {
-                  final item = items[index];
+                  final item = limited[index];
                   final imageUrl = _barangService.buildImageUrl(item.fotoPath);
                   return RecommendationCard(
                     title: item.nama,
@@ -148,9 +203,9 @@ class RecommendationCard extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w700,
               color: Colors.black,
-              fontSize: getProportionateScreenWidth(14),
+              fontSize: getProportionateScreenWidth(13),
             ),
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
           SizedBox(height: getProportionateScreenHeight(4)),

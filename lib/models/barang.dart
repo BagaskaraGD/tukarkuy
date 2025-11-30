@@ -5,6 +5,7 @@ class Barang {
   final String? fotoPath;
   final int stok;
   final String kondisi;
+  final int? categoryId;
 
   Barang({
     required this.id,
@@ -13,9 +14,15 @@ class Barang {
     required this.fotoPath,
     required this.stok,
     required this.kondisi,
+    this.categoryId,
   });
 
   factory Barang.fromJson(Map<String, dynamic> json) {
+    final dynamic cat =
+        json['id_kategori'] ?? json['kategori_id'] ?? json['category_id'];
+    final int? parsedCat =
+        cat is int ? cat : int.tryParse(cat != null ? '$cat' : '');
+
     return Barang(
       id: json['id'] ?? 0,
       nama: json['nama_bar'] ?? '',
@@ -25,6 +32,7 @@ class Barang {
           ? json['stok_bar']
           : int.tryParse('${json['stok_bar']}') ?? 0,
       kondisi: json['kondisi'] ?? '',
+      categoryId: parsedCat,
     );
   }
 }

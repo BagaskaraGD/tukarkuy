@@ -8,7 +8,7 @@ import 'package:tukarkuy/models/barang.dart';
 class BarangService {
   final TokenStorage _tokenStorage = TokenStorage();
 
-  Future<List<Barang>> fetchBarangList() async {
+  Future<List<Barang>> fetchBarangList({int? categoryId}) async {
     try {
       final token = await _tokenStorage.getToken();
       if (token == null) {
@@ -16,7 +16,9 @@ class BarangService {
         return [];
       }
 
-      final uri = Uri.parse("${Config.baseUrl}/barang");
+      final uri = Uri.parse("${Config.baseUrl}/barang").replace(
+        queryParameters: {if (categoryId != null) 'id_kategori': '$categoryId'},
+      );
       final response = await http.get(
         uri,
         headers: {

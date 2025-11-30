@@ -3,7 +3,16 @@ import 'package:flutter/material.dart';
 import '../../../size_config.dart';
 
 class SearchField extends StatelessWidget {
-  const SearchField({super.key});
+  const SearchField({
+    super.key,
+    required this.onChanged,
+    this.readOnly = false,
+    this.onTap,
+  });
+
+  final ValueChanged<String> onChanged;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -16,9 +25,10 @@ class SearchField extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       child: TextFormField(
-        onChanged: (value) {
-          // search value
-        },
+        onChanged: onChanged,
+        readOnly: readOnly,
+        onTap: onTap,
+        textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
